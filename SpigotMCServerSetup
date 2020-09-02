@@ -1,0 +1,98 @@
+import os
+import shutil
+
+
+
+
+
+
+
+
+def InstallServer():
+
+    curr_dir = os.getcwd()
+    print("Do you want to install in current directory? (y/n)")
+    print(f"{curr_dir} - is your current directory")
+    install_in_curr_dir = input()
+
+    if install_in_curr_dir == "y":
+        print("Installing...")
+        os.chdir(f"{os.getcwd()}")
+        os.system("java -jar BuildTools.jar --rev 1.16.2")
+        print("Installing stopped...")
+        Menu()
+
+
+
+    elif install_in_curr_dir == "n":
+
+        user_dir = input("Your Directory: ")
+        os.chdir(user_dir)
+        print("Installing...")
+        os.system("java -jar BuildTools.jar --rev 1.16.2")
+        Menu()
+
+pass
+
+
+
+def UpdateServer():
+
+    print("Updating")
+    os.system("java -jar BuildTools.jar --rev 1.16.2")
+    Menu()
+pass
+
+
+def DeleteServer():
+
+    print("Where are your server files located? (type the whole path to directory)")
+    dir_for_data = input()
+    print(f"Are you sure you want do delete your whole server? This action can't be undone (y/n)")
+    dele = input()
+    if dele == "y":
+        shutil.rmtree(dir_for_data, ignore_errors = True, onerror = None)
+        Menu()
+    else:
+        "Error occurred during deleting files..."
+        Menu()
+
+def RunServer():
+
+    print("Run server?  (y/n)")
+    run = input()
+
+    if run == "y":
+        os.system('java -Xmx3G -jar spigot-1.16.2.jar -nogui')
+        Menu()
+    else:
+        print("Wrong input, going back to menu...")
+        Menu()
+    Menu()
+
+def Menu():
+
+    print(" What do you want to do?")
+    print(" ")
+    print(" ")
+    print("[0] -- Install server")
+    print("[1] -- Run Server")
+    print("[2] -- Update Server")
+    print("[3] -- DELETE SERVER")
+
+    choice = input()
+
+    if choice == "0":
+        InstallServer()
+
+    elif choice == "1":
+        RunServer()
+    elif choice == "2":
+        UpdateServer()
+    elif choice == "3":
+        DeleteServer()
+    pass
+
+
+
+Menu()
