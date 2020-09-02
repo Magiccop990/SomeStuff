@@ -1,0 +1,37 @@
+import datetime
+import os
+import time
+import tkinter as tk
+from tkinter import ttk
+
+
+
+FONT = ("Roboto", 12)
+
+
+def PopUp(msg):
+    popup = tk.Tk()
+    popup.wm_title("!")
+    label = ttk.Label(popup, text=msg, font=FONT)
+    label.pack(side="top", fill="x", pady=10)
+    B1 = ttk.Button(popup, text="Okay", command = popup.destroy)
+    B1.pack()
+    popup.mainloop()
+
+hr = input("Hour of shutdown (1 - 24): ")
+if int(hr) <= 24 and int(hr) >= -1:
+    mn = input("Minute of shutdown (0 - 60: ")
+    if int(mn) <= 60 and int(mn) >= -1:
+
+        deadline = datetime.time(int(hr), int(mn))
+
+
+        while True:
+            now = datetime.datetime.now()
+            print(f"{now.hour} - {now.minute} - {now.second}")
+            if deadline.hour == now.hour and deadline.minute == now.minute:
+                PopUp("Your PC will shut down in 10 seconds")
+                time.sleep(10)
+                os.system("shutdown /p /h")
+                break
+            time.sleep(1)
