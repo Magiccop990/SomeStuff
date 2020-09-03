@@ -1,0 +1,23 @@
+import time
+from win10toast import ToastNotifier
+
+def ShowToast(head, msg, time):
+    t = ToastNotifier()
+    t.show_toast(head, msg, duration=time)
+
+
+
+
+nums = [1, 2, 3, 3, 4, 5,]
+
+haare = array[0]
+tortoise = array[0]
+
+while True:
+    tortoise = nums[tortoise]
+    haare = nums[nums[haare]]
+    print(f"{haare} - {tortoise}")
+    time.sleep(0.2)
+    if haare == tortoise:
+        ShowToast("Match Found!", str(haare), 10)
+        break
