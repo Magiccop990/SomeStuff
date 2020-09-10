@@ -1,0 +1,11 @@
+import speech_recognition as sp
+
+
+def recognize_speech():
+    r = sp.Recognizer()
+    with sp.Microphone() as mic:
+        print("Speak now")
+        audio = r.listen(mic, 2)
+        print("Got the source")
+    
+recognize_speech()
