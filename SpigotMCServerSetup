@@ -1,69 +1,74 @@
-import os
-import shutil
+import os, sys
+import shutil, subprocess
+from psutil import virtual_memory
 
-
-
-
-
-
-
+def CheckJavaInstallation():
+    print("Checking if java is installed")
+    try:
+        java_command_output = subprocess.check_output(["java", "-version"], shell=True).decode()
+    except subprocess.CalledProcessError as e:
+        return False
+    except Exception as e:
+        print("There was an error when checking your java installation: ", end = "")
+        print(e)
+        sys.exit(0)
+    if not "java version" in java_command_output.lower():
+        sys.exit(1)
+    return True
 
 def InstallServer():
-
+    is_java_installed = CheckJavaInstallation()
+    if not is_java_installed:
+        print("Error: java is not installed!")
+        print("\n\n")
+        Menu()
     curr_dir = os.getcwd()
     print("Do you want to install in current directory? (y/n)")
     print(f"{curr_dir} - is your current directory")
-    install_in_curr_dir = input()
+    install_in_curr_dir = input("? ")
 
-    if install_in_curr_dir == "y":
+    if install_in_curr_dir.lower() == "y":
         print("Installing...")
-        os.chdir(f"{os.getcwd()}")
+        os.chdir(f"{os.getcwd()}") # this is totally pointless - os.getcwd returns current directory
         os.system("java -jar BuildTools.jar --rev 1.16.2")
         print("Installing stopped...")
         Menu()
 
-
-
-    elif install_in_curr_dir == "n":
-
+    elif install_in_curr_dir.lower() == "n":
         user_dir = input("Your Directory: ")
         os.chdir(user_dir)
         print("Installing...")
         os.system("java -jar BuildTools.jar --rev 1.16.2")
         Menu()
 
-pass
-
-
-
 def UpdateServer():
-
     print("Updating")
     os.system("java -jar BuildTools.jar --rev 1.16.2")
     Menu()
-pass
 
+def DeletingError():
+    print("There was an error when deleting your files.")
+    return
 
 def DeleteServer():
-
     print("Where are your server files located? (type the whole path to directory)")
-    dir_for_data = input()
+    dir_for_data = input("? ")
     print(f"Are you sure you want do delete your whole server? This action can't be undone (y/n)")
-    dele = input()
+    dele = input("? ")
     if dele == "y":
-        shutil.rmtree(dir_for_data, ignore_errors = True, onerror = None)
+        shutil.rmtree(dir_for_data, ignore_errors = True, onerror = DeletingError)
         Menu()
     else:
-        "Error occurred during deleting files..."
         Menu()
 
 def RunServer():
-
     print("Run server?  (y/n)")
-    run = input()
+    run = input("? ")
 
     if run == "y":
-        os.system('java -Xmx3G -jar spigot-1.16.2.jar -nogui')
+        memory = (virtual_memory().total * (10 ^ -9) )
+        print("Allocating half of memory - %dGB" % (memory))
+        os.system('java -Xmx%dG -Xms%dG -jar spigot-1.16.2.jar -nogui' % (memory, memory))
         Menu()
     else:
         print("Wrong input, going back to menu...")
@@ -71,28 +76,136 @@ def RunServer():
     Menu()
 
 def Menu():
-
     print(" What do you want to do?")
-    print(" ")
-    print(" ")
+    print("\n")
     print("[0] -- Install server")
     print("[1] -- Run Server")
     print("[2] -- Update Server")
     print("[3] -- DELETE SERVER")
 
-    choice = input()
+    choice = input("? ")
 
     if choice == "0":
         InstallServer()
-
     elif choice == "1":
         RunServer()
     elif choice == "2":
         UpdateServer()
     elif choice == "3":
         DeleteServer()
-    pass
+
+if __name__ == "__main__":
+    Menu()
+[ivicek@ivicek-arch SomeStuff]$ nano SpigotMCServerSetup.py 
+[ivicek@ivicek-arch SomeStuff]$ python SpigotMCServerSetup.py  
+Checking if java is installed
+-version: java: command not found
+Error: java is not installed!
 
 
 
-Menu()
+[ivicek@ivicek-arch SomeStuff]$ nano SpigotMCServerSetup.py   
+[ivicek@ivicek-arch SomeStuff]$ python SpigotMCServerSetup.py 
+Checking if java is installed
+-version: java: command not found
+Error: java is not installed!
+[ivicek@ivicek-arch SomeStuff]$ nano SpigotMCServerSetup.py   
+[ivicek@ivicek-arch SomeStuff]$ cat SpigotMCServerSetup.py 
+import os, sys
+import shutil, subprocess, math
+from psutil import virtual_memory
+
+def CheckJavaInstallation():
+    print("Checking if java is installed")
+    try:
+        java_command_output = subprocess.check_output(["java", "-version"], shell=True).decode()
+    except subprocess.CalledProcessError as e:
+        return False
+    except Exception as e:
+        print("There was an error when checking your java installation: ", end = "")
+        print(e)
+        return False
+    if not "java version" in java_command_output.lower():
+        return False
+    return True
+
+def InstallServer():
+    curr_dir = os.getcwd()
+    print("Do you want to install in current directory? (y/n)")
+    print(f"{curr_dir} - is your current directory")
+    install_in_curr_dir = input("? ")
+
+    if install_in_curr_dir.lower() == "y":
+        print("Installing...")
+        os.chdir(f"{os.getcwd()}") # this is totally pointless - os.getcwd returns current directory
+        os.system("java -jar BuildTools.jar --rev 1.16.2")
+        print("Installing stopped...")
+        Menu()
+
+    elif install_in_curr_dir.lower() == "n":
+        user_dir = input("Your Directory: ")
+        os.chdir(user_dir)
+        print("Installing...")
+        os.system("java -jar BuildTools.jar --rev 1.16.2")
+        Menu()
+
+def UpdateServer():
+    print("Updating")
+    os.system("java -jar BuildTools.jar --rev 1.16.2")
+    Menu()
+
+def DeletingError():
+    print("There was an error when deleting your files.")
+    return
+
+def DeleteServer():
+    print("Where are your server files located? (type the whole path to directory)")
+    dir_for_data = input("? ")
+    print(f"Are you sure you want do delete your whole server? This action can't be undone (y/n)")
+    dele = input("? ")
+    if dele == "y":
+        shutil.rmtree(dir_for_data, ignore_errors = True, onerror = DeletingError)
+        Menu()
+    else:
+        Menu()
+
+def RunServer():
+    print("Run server?  (y/n)")
+    run = input("? ")
+
+    if run == "y":
+        memory = (virtual_memory().total * (10 ^ -9))
+        memory = math.floor(memory)
+        print("Allocating half of memory - %dGB" % (memory))
+        os.system('java -Xmx%dG -Xms%dG -jar spigot-1.16.2.jar -nogui' % (memory, memory))
+        Menu()
+    else:
+        print("Wrong input, going back to menu...")
+        Menu()
+    Menu()
+
+def Menu():
+    is_java_installed = CheckJavaInstallation()
+    if not is_java_installed:
+        print("Error: java is not installed!")
+        return
+    print(" What do you want to do?")
+    print("\n")
+    print("[0] -- Install server")
+    print("[1] -- Run Server")
+    print("[2] -- Update Server")
+    print("[3] -- DELETE SERVER")
+
+    choice = input("? ")
+
+    if choice == "0":
+        InstallServer()
+    elif choice == "1":
+        RunServer()
+    elif choice == "2":
+        UpdateServer()
+    elif choice == "3":
+        DeleteServer()
+
+if __name__ == "__main__":
+    Menu()
