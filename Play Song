@@ -1,0 +1,43 @@
+from playsound import playsound
+import datetime, time
+
+
+
+
+def Menu():
+    song_loc = input("Location to song: ")
+    best_part_at = input("Best part (mm:ss): ")
+    play_at = input("What time should best part play (hh:mm:ss): ")
+
+    best_part_at = "1:12"
+    play_at = "18:04:05"
+
+
+    best_part_at_split = best_part_at.split(":")
+    play_at_split = play_at.split(":")
+    print(play_at_split)
+
+    now = datetime.datetime.now()
+    tdelta = datetime.datetime(year=now.year(), month=now.month(), day=now.day(), hour=now.hour(), minute=int(best_part_at_split[0]), seconds=int(best_part_at_split[1]))
+
+    while True:
+        now_delta = (datetime.datetime.now() + datetime.timedelta(minutes=int(best_part_at_split[0]), seconds=int(best_part_at_split[1]))).time()
+        now_delta_split = now_delta.split(":")
+        time.sleep(1)
+        print(now_delta_split)
+
+        if now_delta.hour() == now.hour() and now_delta.minute() == now.minute() and now_delta.second() == now.second():
+            print()
+        
+            
+    
+Menu()
+
+
+
+#ERRORS: Traceback (most recent call last):
+  #File "d:/Python/Test/T/Main/install/test.py", line 34, in <module>
+    #Menu()
+  #File "d:/Python/Test/T/Main/install/test.py", line 21, in Menu
+    #tdelta = datetime.datetime(year=now.year(), month=now.month(), day=now.day(), hour=now.hour(), minute=int(best_part_at_split[0]), seconds=int(best_part_at_split[1]))
+#TypeError: 'int' object is not callable
