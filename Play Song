@@ -1,5 +1,5 @@
 from playsound import playsound
-import datetime, time
+import datetime, time, os
 
 
 
@@ -16,8 +16,11 @@ def get_datetime_from_string(s):
   return datetime.datetime(now.year, now.month, now.day, values[0], values[1], values[2])
 
 def Menu():
-  
   song_loc = input("Location to song: ")
+  if not os.path.exists(song_loc):
+    print("That path does not exist!")
+    Menu()
+    return
   best_part_at = input("Best part (mm:ss): ")
   play_at = input("What time should best part play (hh:mm:ss): ")
 
@@ -33,9 +36,7 @@ def Menu():
     if desired_time.hour == now.hour and desired_time.minute == now.minute and desired_time.second >= now.second:
         print("Playing...")
         playsound(song_loc)
-        
-            
-    
+
 Menu()
 
 
