@@ -18,10 +18,12 @@ def Menu():
     print(play_at_split)
 
     now = datetime.datetime.now()
-    tdelta = datetime.datetime(year=now.year(), month=now.month(), day=now.day(), hour=now.hour(), minute=int(best_part_at_split[0]), seconds=int(best_part_at_split[1]))
+    tdelta = now
+    tdelta.minute = int(best_part_at_split[0])
+    tdelta.seconds = int(best_part_at_split[1])
 
     while True:
-        now_delta = (datetime.datetime.now() + datetime.timedelta(minutes=int(best_part_at_split[0]), seconds=int(best_part_at_split[1]))).time()
+        now_delta = (datetime.datetime.now() + datetime.timedelta(minutes=tdelta.minutes, seconds=tdelta.seconds)).time()
         now_delta_split = now_delta.split(":")
         time.sleep(1)
         print(now_delta_split)
