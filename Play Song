@@ -3,36 +3,39 @@ import datetime, time
 
 
 
+def get_timedelta_from_string(s):
+  return datetime.timedelta(seconds = int(s.split(":")[1]), minutes= int(s.split(":")[0]))
+
+
+def get_datetime_from_string(s):
+  now = datetime.datetime.now()
+  split_s = s.split(":")
+  values = []
+  for i in split_s:
+    values.append(int(i))
+  return datetime.datetime(now.year, now.month, now.day, values[0], values[1], values[2])
 
 def Menu():
-    song_loc = input("Location to song: ")
-    best_part_at = input("Best part (mm:ss): ")
-    play_at = input("What time should best part play (hh:mm:ss): ")
+  song_loc = input("Location to song: ")
+  if not os.path.exists(song_loc):
+    print("That path does not exist!")
+    Menu()
+    return
+  best_part_at = input("Best part (mm:ss): ")
+  play_at = input("What time should best part play (hh:mm:ss): ")
 
-    best_part_at = "1:12"
-    play_at = "18:04:05"
+  play_at_datetime = get_datetime_from_string(play_at)
+  desired_timedelta = get_timedelta_from_string(best_part_at)
+  desired_time = play_at_datetime - desired_timedelta
+  print("Playing song in: " + song_loc + " at " + str(desired_time))
 
-
-    best_part_at_split = best_part_at.split(":")
-    play_at_split = play_at.split(":")
-    print(play_at_split)
-
+  while True:
+    time.sleep(1)
     now = datetime.datetime.now()
-    tdelta = now
-    tdelta.minute = int(best_part_at_split[0])
-    tdelta.seconds = int(best_part_at_split[1])
 
-    while True:
-        now_delta = (datetime.datetime.now() + datetime.timedelta(minutes=tdelta.minutes, seconds=tdelta.seconds)).time()
-        now_delta_split = now_delta.split(":")
-        time.sleep(1)
-        print(now_delta_split)
-
-        if now_delta.hour() == now.hour() and now_delta.minute() == now.minute() and now_delta.second() == now.second():
-            print()
-        
-            
-    
+    if desired_time.hour == now.hour and desired_time.minute == now.minute and desired_time.second >= now.second:
+        print("Playing...")
+        playsound(song_loc)
 Menu()
 
 
