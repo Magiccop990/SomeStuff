@@ -36,6 +36,7 @@ def Menu():
     if desired_time.hour == now.hour and desired_time.minute == now.minute and desired_time.second >= now.second:
         print("Playing...")
         playsound(song_loc)
+        break
 
 if __name__ == "__main__":
   Menu()
